@@ -1,0 +1,17 @@
+# nftables Test 2 - Stateful/source-restricted SSH access control
+# Kali source: 192.168.0.35
+# Ubuntu target: 192.168.20.10
+
+sudo nft flush ruleset
+sudo nft add table inet filter
+sudo nft 'add chain inet filter input { type filter hook input priority 0; policy drop; }'
+sudo nft 'add chain inet filter output { type filter hook output priority 0; policy accept; }'
+sudo nft add rule inet filter input iif lo counter accept
+sudo nft add rule inet filter input ct state established,related counter accept
+sudo nft add rule inet filter input ip saddr 192.168.0.35 ip protocol icmp counter accept
+sudo nft add rule inet filter input ip saddr 192.168.0.35 tcp dport 22 counter accept
+sudo nft add rule inet filter input ct state invalid counter drop
+
+# Test removal of the SSH access rule using its actual handle:
+sudo nft -a list chain inet filter input
+sudo nft delete rule inet filter input handle <SSH-rule-handle>

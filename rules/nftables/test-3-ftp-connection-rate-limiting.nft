@@ -1,0 +1,17 @@
+# nftables Test 3 - FTP connection rate limiting
+# FTP service: vsftpd / TCP 21
+
+sudo nft flush ruleset
+sudo nft add table inet filter
+sudo nft 'add chain inet filter input { type filter hook input priority 0; policy accept; }'
+sudo nft 'add chain inet filter output { type filter hook output priority 0; policy accept; }'
+sudo nft add rule inet filter input tcp dport 21 ct state new limit rate 5/minute burst 5 packets counter accept
+sudo nft add rule inet filter input tcp dport 21 ct state new counter drop
+
+# Test from Kali:
+for i in {1..10}; do
+    timeout 2 nc -nvz 192.168.20.10 21
+done
+
+# Verify counters on Ubuntu:
+sudo nft list chain inet filter input
