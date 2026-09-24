@@ -1,4 +1,4 @@
-# Firewall Security Testing Lab
+# Network Security CA1 - Open Source Firewall Evaluation
 
 > **Reconstruction note:** The original project document was lost. The lab was therefore recreated using retained screenshots from the original work, which documented the firewall configurations and testing performed. These screenshots were used as the reference to reproduce and organize the same lab scenarios, configurations, and evidence in this repository.
 
